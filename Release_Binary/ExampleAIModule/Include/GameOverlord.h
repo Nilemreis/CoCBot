@@ -10,6 +10,7 @@ namespace CoCBot
 		//TimerManager    m_timerManager;
 
 		BWAPI::Unitset  m_validUnits;
+		BWAPI::Unitset  m_commandUnits;
 		BWAPI::Unitset  m_combatUnits;
 		BWAPI::Unitset  m_scoutUnits;
 
@@ -21,10 +22,20 @@ namespace CoCBot
 		GameOverlord();
 		void update();
 
+		BWAPI::Unitset  m_marines;
+		BWAPI::Unitset  m_vultures;
+		BWAPI::Unitset  m_goliaths;
+		std::list<BWAPI::Unitset> m_unitTypesList;
+
 		void handleUnitAssignments();
 		void setValidUnits();
 		//void setScoutUnits();
+		void setCommandUnits();
 		void setCombatUnits();
+		void setMarines();
+		void setVultures();
+		void setGoliaths();
+
 
 		void drawDebugInterface();
 		void drawGameInformation(int x, int y);

@@ -1,5 +1,6 @@
 #pragma once
 #include <BWAPI.h>
+#include "Include/GameOverlord.h"
 
 // Remember not to use "Broodwar" in any global class constructor!
 namespace CoCBot
@@ -27,5 +28,6 @@ namespace CoCBot
 		virtual void onUnitComplete(BWAPI::Unit unit);
 		// Everything below this line is safe to modify.
 		bool atkcmd;
+		GameOverlord GO;
 	};
 }

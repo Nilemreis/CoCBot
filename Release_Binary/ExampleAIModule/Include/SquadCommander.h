@@ -20,6 +20,7 @@ namespace CoCBot
         int                 m_lastRetreatSwitch = 0;
         bool                m_lastRetreatSwitchVal = false;
         size_t              m_priority = 0;
+		BWAPI::Unit			m_commander;
 
         SquadOrder          m_order;
         //MeleeManager        m_meleeManager;
@@ -44,7 +45,7 @@ namespace CoCBot
 
     public:
 
-        SquadCommander(const std::string& name, SquadOrder order, size_t priority);
+        SquadCommander(const std::string& name, SquadOrder order, size_t priority, BWAPI::Unit commander);
         SquadCommander();
         ~SquadCommander();
 

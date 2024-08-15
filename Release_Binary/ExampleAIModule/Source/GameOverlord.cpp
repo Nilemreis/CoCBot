@@ -7,6 +7,7 @@ GameOverlord::GameOverlord()
 	: m_initialScoutSet(false)
 {
 
+	handleUnitAssignments();
 }
 
 void GameOverlord::update()
@@ -16,7 +17,7 @@ void GameOverlord::update()
 	//m_timerManager.startTimer(TimerManager::All);
 	//
 	//// populate the unit vectors we will pass into various managers
-	handleUnitAssignments();
+
 	//
 	//// utility managers
 	//m_timerManager.startTimer(TimerManager::InformationManager);
@@ -38,7 +39,7 @@ void GameOverlord::update()
 
 	// combat and scouting managers
 	//m_timerManager.startTimer(TimerManager::Combat);
-	m_combatOverlord.update(m_combatUnits);
+	m_combatOverlord.update(m_unitTypesList, m_commandUnits);
 	//m_timerManager.stopTimer(TimerManager::Combat);
 
 	//m_timerManager.startTimer(TimerManager::Scout);
@@ -97,21 +98,23 @@ void GameOverlord::drawGameInformation(int x, int y)
 // assigns units to various managers
 void GameOverlord::handleUnitAssignments()
 {
+	BWAPI::Broodwar->drawTextScreen(400, 200, "initunit assingment");
 	m_validUnits.clear();
 	m_combatUnits.clear();
 
-	//setCommanders();
 	// filter our units for those which are valid and usable
 	setValidUnits();
 
 	// set each type of unit
+	setCommandUnits();
 	//setScoutUnits();
 	setCombatUnits();
+
 }
 
 bool GameOverlord::isAssigned(BWAPI::Unit unit) const
 {
-	return m_combatUnits.contains(unit) || m_scoutUnits.contains(unit);
+	return m_combatUnits.contains(unit) || m_scoutUnits.contains(unit) || m_commandUnits.contains(unit);
 }
 
 // validates units as usable for distribution to various managers
@@ -123,6 +126,17 @@ void GameOverlord::setValidUnits()
 		if (UnitState::IsValidUnit(unit))
 		{
 			m_validUnits.insert(unit);
+		}
+	}
+}
+
+void GameOverlord::setCommandUnits()
+{
+	for (auto& unit : m_validUnits)
+	{
+		if (!isAssigned(unit) && unit->getType().isWorker())
+		{
+			assignUnit(unit, m_commandUnits);
 		}
 	}
 }
@@ -156,9 +170,25 @@ void GameOverlord::setCombatUnits()
 {
 	for (auto& unit : m_validUnits)
 	{
-		if (!isAssigned(unit) && UnitState::IsCombatUnit(unit) || unit->getType().isWorker())
+		if (!isAssigned(unit) /*&& UnitState::IsCombatUnit(unit)*/)
 		{
-			assignUnit(unit, m_combatUnits);
+			for (auto& unitSet : m_unitTypesList)
+			{
+				//for (auto& tmp : unitSet)
+				BWAPI::Unit tmp = *unitSet.end();
+				if (tmp->getType() == unit->getType())
+				{
+					//unitSet.insert(unit);
+					assignUnit(unit, unitSet);
+				}
+				else
+				{
+					BWAPI::Unitset uSet;
+					assignUnit(unit, m_combatUnits);
+					m_unitTypesList.push_back(uSet);
+					//*m_unitTypesList.insert(unit, unitSet);
+				}
+			}
 		}
 	}
 }
@@ -218,12 +248,27 @@ void GameOverlord::setCombatUnits()
 //	Global::Info().onUnitRenegade(unit);
 //}
 //
-//void GameOverlord::onUnitDestroy(BWAPI::Unit unit)
-//{
-//	Global::Production().onUnitDestroy(unit);
-//	Global::Workers().onUnitDestroy(unit);
-//	Global::Info().onUnitDestroy(unit);
-//}
+void GameOverlord::onUnitDestroy(BWAPI::Unit unit)
+{
+	for (auto& unitSet : m_unitTypesList)
+	{
+		for (auto& tmp : unitSet)
+		{
+			if (tmp == unit)
+			{
+				unitSet.erase(unit);
+			}
+		}
+	}
+
+	if (unit->getType().isWorker())
+	{
+		m_commandUnits.erase(unit);
+	}
+	//	Global::Production().onUnitDestroy(unit);
+	//	Global::Workers().onUnitDestroy(unit);
+	//	Global::Info().onUnitDestroy(unit);
+}
 //
 //void GameOverlord::onUnitMorph(BWAPI::Unit unit)
 //{

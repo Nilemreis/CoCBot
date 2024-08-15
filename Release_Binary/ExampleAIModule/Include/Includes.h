@@ -15,6 +15,7 @@
 #include <map>
 #include <array>
 #include <cassert>
+#include <time.h>
 
 #include <BWAPI.h>
 

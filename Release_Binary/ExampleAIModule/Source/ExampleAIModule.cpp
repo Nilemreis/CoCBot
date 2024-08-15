@@ -1,7 +1,6 @@
 #include "Include/ExampleAIModule.h"
 #include <iostream>
 
-#include "Include/GameOverlord.h"
 
 using namespace BWAPI;
 using namespace Filter;
@@ -51,6 +50,7 @@ void ExampleAIModule::onStart()
 			Broodwar << "The matchup is " << Broodwar->self()->getRace() << " vs " << Broodwar->enemy()->getRace() << std::endl;
 	}
 	atkcmd = false;
+	
 }
 
 void CoCBot::ExampleAIModule::onEnd(bool isWinner)
@@ -82,7 +82,6 @@ void CoCBot::ExampleAIModule::onFrame()
 	// Iterate through all the units that we own
 	if (atkcmd == false)
 	{
-		GameOverlord GO;
 		GO.update();
 		atkcmd = true;
 	}

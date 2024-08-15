@@ -83,9 +83,9 @@ void Squads::updateAllSquads()
 void Squads::drawSquadInformation(int x, int y)
 {
     //if (!Config::Debug::DrawSquadInfo)
-    {
-        return;
-    }
+    //{
+    //    return;
+    //}
 
     BWAPI::Broodwar->drawTextScreen(x, y, "\x04Squads");
     BWAPI::Broodwar->drawTextScreen(x, y + 20, "\x04NAME");
