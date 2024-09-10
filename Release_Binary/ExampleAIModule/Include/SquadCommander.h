@@ -2,7 +2,7 @@
 
 #include "Includes.h"
 //#include "MeleeManager.h"
-//#include "RangedManager.h"
+#include "RangedManager.h"
 //#include "DetectorManager.h"
 //#include "TransportManager.h"
 #include "SquadOrders.h"
@@ -24,7 +24,7 @@ namespace CoCBot
 
         SquadOrder          m_order;
         //MeleeManager        m_meleeManager;
-        //RangedManager       m_rangedManager;
+        RangedManager       m_rangedManager;
         //DetectorManager     m_detectorManager;
         //TransportManager    m_transportManager;
         //TankManager         m_tankManager;

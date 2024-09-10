@@ -57,7 +57,8 @@ void CombatOverlord::update(const std::list<BWAPI::Unitset>& combatUnits, const 
 	//{
 	//    return;
 	//}
-
+	BWAPI::Broodwar << "testwid" << std::endl;
+	m_commandUnits = commandUnits;
 	if (!m_initialized)
 	{
 		initializeSquads();
@@ -74,6 +75,18 @@ void CombatOverlord::update(const std::list<BWAPI::Unitset>& combatUnits, const 
 	}
 
 	m_squads.update();
+
+	//for (auto& unit : BWAPI::Broodwar->self()->getUnits())
+	//{
+	//	unit->attack(BWAPI::Position(BWAPI::Broodwar->enemy()->getStartLocation()));
+	//}
+	//BWAPI::Broodwar << m_squads.getSquad("MainAttack").getUnits().size() << "frst" << std::endl;
+	//BWAPI::Broodwar << m_squads.getSquad("SecondAttack").getUnits().size() << "scnd" << std::endl;
+	//BWAPI::Broodwar << m_squads.getSquad("ThirdAttack").getUnits().size() << "thrd" << std::endl;
+	for (auto& unit : m_squads.getSquad("MainAttack").getUnits())
+	{
+		unit->attack(BWAPI::Position(BWAPI::Broodwar->enemy()->getStartLocation()));
+	}
 }
 
 void CombatOverlord::updateIdleSquad()
@@ -91,29 +104,33 @@ void CombatOverlord::updateIdleSquad()
 
 void CombatOverlord::updateAttackSquads()
 {
-	//for (auto& unit : BWAPI::Broodwar->self()->getUnits())
-	//{
-	//	unit->attack(BWAPI::Position(BWAPI::Broodwar->enemy()->getStartLocation()));
-	//}
 	SquadCommander& mainAttackSquad = m_squads.getSquad("MainAttack");
+	int k;
 
 	for (auto& unitsType : m_unitTypesList)
 	{
+		k = 0;
 		//if (unit->getType() == BWAPI::UnitTypes::Zerg_Scourge && UnitState::GetAllUnitCount(BWAPI::UnitTypes::Zerg_Hydralisk) < 30)
 		//{
 		//    continue;
 		//}
-		int theThirdPart = unitsType.size();
-		for (int i = 0; i < theThirdPart; i++)
+		int theThirdPart = unitsType.size() / 3;
+		for (auto& unit : unitsType)
+			//for (int i = 0; i <= theThirdPart; i++)
 		{
-			const auto& unit = *unitsType.begin() + i;
-			// get every unit of a lower priority and put it into the attack squad
+			k++;
+			//auto& unit = *unitsType.begin() + i;
+		   // get every unit of a lower priority and put it into the attack squad
 			if (/*!unit->getType().isWorker() && (unit->getType() != BWAPI::UnitTypes::Zerg_Overlord) &&*/ m_squads.canAssignUnitToSquad(unit, mainAttackSquad))
 			{
 				m_squads.assignUnitToSquad(unit, mainAttackSquad);
 			}
+			if (k > theThirdPart)
+				break;
+
 		}
 	}
+	BWAPI::Broodwar << m_squads.getSquad("MainAttack").getUnits().size() << "frsdasst" << std::endl;
 
 	SquadOrder mainAttackOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
 	mainAttackSquad.setSquadOrder(mainAttackOrder);
@@ -122,19 +139,24 @@ void CombatOverlord::updateAttackSquads()
 
 	for (auto& unitsType : m_unitTypesList)
 	{
+		k = 0;
 		//if (unit->getType() == BWAPI::UnitTypes::Zerg_Scourge && UnitState::GetAllUnitCount(BWAPI::UnitTypes::Zerg_Hydralisk) < 30)
 		//{
 		//    continue;
 		//}
-		int theThirdPart = unitsType.size();
-		for (int i = theThirdPart; i < 2*theThirdPart; i++)
+		int theThirdPart = unitsType.size() / 3;
+		//for (int i = theThirdPart; i <= 2 * theThirdPart; i++)
+		for (auto& unit : unitsType)
 		{
-			const auto& unit = *unitsType.begin() + i;
+			k++;
+			//const auto& unit = *unitsType.begin() + i;
 			// get every unit of a lower priority and put it into the attack squad
 			if (/*!unit->getType().isWorker() && (unit->getType() != BWAPI::UnitTypes::Zerg_Overlord) &&*/ m_squads.canAssignUnitToSquad(unit, secondaryAttackSquad))
 			{
 				m_squads.assignUnitToSquad(unit, secondaryAttackSquad);
 			}
+			if (k > theThirdPart)
+				break;
 		}
 	}
 
@@ -145,19 +167,24 @@ void CombatOverlord::updateAttackSquads()
 
 	for (auto& unitsType : m_unitTypesList)
 	{
+		k = 0;
 		//if (unit->getType() == BWAPI::UnitTypes::Zerg_Scourge && UnitState::GetAllUnitCount(BWAPI::UnitTypes::Zerg_Hydralisk) < 30)
 		//{
 		//    continue;
 		//}
-		int theThirdPart = unitsType.size();
-		for (int i = theThirdPart*2; i < theThirdPart*3; i++)
+		int theThirdPart = unitsType.size() / 3;
+		//for (int i = theThirdPart * 2; i <= theThirdPart * 3; i++)
+		for (auto& unit : unitsType)
 		{
-			const auto& unit = *unitsType.begin() + i;
+			k++;
+			//const auto& unit = *unitsType.begin() + i;
 			// get every unit of a lower priority and put it into the attack squad
 			if (/*!unit->getType().isWorker() && (unit->getType() != BWAPI::UnitTypes::Zerg_Overlord) &&*/ m_squads.canAssignUnitToSquad(unit, thirdAttackSquad))
 			{
-				m_squads.assignUnitToSquad(unit, mainAttackSquad);
+				m_squads.assignUnitToSquad(unit, thirdAttackSquad);
 			}
+			if (k > theThirdPart)
+				break;
 		}
 	}
 

@@ -93,23 +93,51 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\BaseLocation.cpp" />
+    <ClCompile Include="Source\BaseLocationManager.cpp" />
     <ClCompile Include="Source\CombatOverlord.cpp" />
+    <ClCompile Include="Source\DistanceMap.cpp" />
     <ClCompile Include="Source\Dll.cpp" />
     <ClCompile Include="Source\ExampleAIModule.cpp" />
     <ClCompile Include="Source\GameOverlord.cpp" />
+    <ClCompile Include="Source\Global.cpp" />
+    <ClCompile Include="Source\InformationManager.cpp" />
+    <ClCompile Include="Source\MapTools.cpp" />
+    <ClCompile Include="Source\Micro.cpp" />
+    <ClCompile Include="Source\MicroManager.cpp" />
+    <ClCompile Include="Source\RangedManager.cpp" />
     <ClCompile Include="source\SquadCommander.cpp" />
     <ClCompile Include="source\Squads.cpp" />
+    <ClCompile Include="Source\UABAssert.cpp" />
+    <ClCompile Include="Source\UnitData.cpp" />
     <ClCompile Include="Source\UnitState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\BaseLocation.h" />
+    <ClInclude Include="Include\BaseLocationManager.h" />
     <ClInclude Include="Include\CombatOverlord.h" />
+    <ClInclude Include="Include\DistanceMap.h" />
     <ClInclude Include="Include\ExampleAIModule.h" />
     <ClInclude Include="Include\GameOverlord.h" />
+    <ClInclude Include="Include\Global.h" />
+    <ClInclude Include="Include\Grid.hpp" />
     <ClInclude Include="Include\Includes.h" />
+    <ClInclude Include="Include\InformationManager.h" />
+    <ClInclude Include="Include\MapTools.h" />
+    <ClInclude Include="Include\Micro.h" />
+    <ClInclude Include="Include\MicroManager.h" />
+    <ClInclude Include="Include\Profiler.hpp" />
+    <ClInclude Include="Include\RangedManager.h" />
     <ClInclude Include="include\SquadCommander.h" />
     <ClInclude Include="Include\SquadOrders.h" />
     <ClInclude Include="include\Squads.h" />
+    <ClInclude Include="Include\UABAssert.h" />
+    <ClInclude Include="Include\UnitData.h" />
     <ClInclude Include="Include\UnitState.h" />
+    <ClInclude Include="stardraft\BaseBorderFinder.hpp" />
+    <ClInclude Include="stardraft\Grid2D.hpp" />
+    <ClInclude Include="stardraft\StarDraft.h" />
+    <ClInclude Include="stardraft\StarDraftMap.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BWAPILIB\BWAPILIB.vcxproj">

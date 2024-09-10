@@ -168,26 +168,38 @@ void GameOverlord::setCommandUnits()
 // sets combat units to be passed to CombatCommander
 void GameOverlord::setCombatUnits()
 {
+	bool bl;
 	for (auto& unit : m_validUnits)
 	{
+		bl = true;
 		if (!isAssigned(unit) /*&& UnitState::IsCombatUnit(unit)*/)
 		{
+			BWAPI::Unitset uSet;
+			if (m_unitTypesList.empty())
+			{
+				assignUnit(unit, uSet);
+				m_unitTypesList.push_back(uSet);
+				continue;
+			}
+
 			for (auto& unitSet : m_unitTypesList)
 			{
 				//for (auto& tmp : unitSet)
-				BWAPI::Unit tmp = *unitSet.end();
+				BWAPI::Unit tmp = *unitSet.begin();
+				assignUnit(unit, m_combatUnits);
 				if (tmp->getType() == unit->getType())
 				{
 					//unitSet.insert(unit);
 					assignUnit(unit, unitSet);
+					bl = false;
+					break;
+
 				}
-				else
-				{
-					BWAPI::Unitset uSet;
-					assignUnit(unit, m_combatUnits);
-					m_unitTypesList.push_back(uSet);
-					//*m_unitTypesList.insert(unit, unitSet);
-				}
+			}
+			if (bl)
+			{
+				assignUnit(unit, uSet);
+				m_unitTypesList.push_back(uSet);
 			}
 		}
 	}

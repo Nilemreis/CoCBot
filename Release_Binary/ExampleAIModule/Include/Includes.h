@@ -20,5 +20,5 @@
 #include <BWAPI.h>
 
 //#include "Config.h"
-//#include "UABAssert.h"
-//#include "Profiler.hpp"
+#include "UABAssert.h"
+#include "Profiler.hpp"
