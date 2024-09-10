@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Source\CombatOverlord.cpp" />
+    <ClCompile Include="Source\Dll.cpp" />
+    <ClCompile Include="Source\ExampleAIModule.cpp" />
+    <ClCompile Include="Source\GameOverlord.cpp" />
+    <ClCompile Include="source\SquadCommander.cpp" />
+    <ClCompile Include="source\Squads.cpp" />
+    <ClCompile Include="Source\UnitState.cpp" />
+    <ClCompile Include="Source\UABAssert.cpp" />
+    <ClCompile Include="Source\UnitData.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\CombatOverlord.h" />
+    <ClInclude Include="Include\ExampleAIModule.h" />
+    <ClInclude Include="Include\GameOverlord.h" />
+    <ClInclude Include="Include\Includes.h" />
+    <ClInclude Include="include\SquadCommander.h" />
+    <ClInclude Include="Include\SquadOrders.h" />
+    <ClInclude Include="include\Squads.h" />
+    <ClInclude Include="Include\UnitState.h" />
+    <ClInclude Include="stardraft\BaseBorderFinder.hpp">
+      <Filter>Stardtaft</Filter>
+    </ClInclude>
+    <ClInclude Include="stardraft\StarDraftMap.hpp">
+      <Filter>Stardtaft</Filter>
+    </ClInclude>
+    <ClInclude Include="stardraft\Grid2D.hpp">
+      <Filter>Stardtaft</Filter>
+    </ClInclude>
+    <ClInclude Include="stardraft\StarDraft.h">
+      <Filter>Stardtaft</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Profiler.hpp" />
+    <ClInclude Include="Include\UABAssert.h" />
+    <ClInclude Include="Include\UnitData.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Stardtaft">
+      <UniqueIdentifier>{d9174c2d-b433-4461-929d-83829763835b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
