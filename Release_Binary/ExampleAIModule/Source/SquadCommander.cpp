@@ -156,39 +156,39 @@ void SquadCommander::addUnitsToMicroManagers()
     {
         if (unit->isCompleted() && unit->getHitPoints() > 0 && unit->exists())
         {
-            // select dector m_units
-            if (unit->getType() == BWAPI::UnitTypes::Terran_Medic)
-            {
-                medicUnits.insert(unit);
-            }
-            else if (unit->getType() == BWAPI::UnitTypes::Terran_Siege_Tank_Siege_Mode || unit->getType() == BWAPI::UnitTypes::Terran_Siege_Tank_Tank_Mode)
-            {
-                tankUnits.insert(unit);
-            }
-            else if (unit->getType().isDetector() && !unit->getType().isBuilding())
-            {
-                detectorUnits.insert(unit);
-            }
-            // select transport m_units
-            else if (unit->getType() == BWAPI::UnitTypes::Protoss_Shuttle || unit->getType() == BWAPI::UnitTypes::Terran_Dropship)
-            {
-                transportUnits.insert(unit);
-            }
-            // select ranged m_units
-            else if ((unit->getType().groundWeapon().maxRange() > 32) || (unit->getType() == BWAPI::UnitTypes::Protoss_Reaver) || (unit->getType() == BWAPI::UnitTypes::Zerg_Scourge))
+            //// select dector m_units
+            //if (unit->getType() == BWAPI::UnitTypes::Terran_Medic)
+            //{
+            //    medicUnits.insert(unit);
+            //}
+            //else if (unit->getType() == BWAPI::UnitTypes::Terran_Siege_Tank_Siege_Mode || unit->getType() == BWAPI::UnitTypes::Terran_Siege_Tank_Tank_Mode)
+            //{
+            //    tankUnits.insert(unit);
+            //}
+            //else if (unit->getType().isDetector() && !unit->getType().isBuilding())
+            //{
+            //    detectorUnits.insert(unit);
+            //}
+            //// select transport m_units
+            //else if (unit->getType() == BWAPI::UnitTypes::Protoss_Shuttle || unit->getType() == BWAPI::UnitTypes::Terran_Dropship)
+            //{
+            //    transportUnits.insert(unit);
+            //}
+            //// select ranged m_units
+            //else if ((unit->getType().groundWeapon().maxRange() > 32) || (unit->getType() == BWAPI::UnitTypes::Protoss_Reaver) || (unit->getType() == BWAPI::UnitTypes::Zerg_Scourge))
             {
                 rangedUnits.insert(unit);
             }
             // select melee m_units
-            else if (unit->getType().groundWeapon().maxRange() <= 32)
-            {
-                meleeUnits.insert(unit);
-            }
+            //else if (unit->getType().groundWeapon().maxRange() <= 32)
+            //{
+            //    meleeUnits.insert(unit);
+            //}
         }
     }
 
     //m_meleeManager.setUnits(meleeUnits);
-    //m_rangedManager.setUnits(rangedUnits);
+    m_rangedManager.setUnits(rangedUnits);
     //m_detectorManager.setUnits(detectorUnits);
     //m_transportManager.setUnits(transportUnits);
     //m_tankManager.setUnits(tankUnits);
@@ -311,13 +311,13 @@ bool SquadCommander::containsUnit(BWAPI::Unit u) const
 
 void SquadCommander::clear()
 {
-    for (auto& unit : getUnits())
-    {
-        if (unit->getType().isWorker())
-        {
-            //Global::Workers().finishedWithWorker(unit);
-        }
-    }
+    //for (auto& unit : getUnits())
+    //{
+    //    if (unit->getType().isWorker())
+    //    {
+    //        //Global::Workers().finishedWithWorker(unit);
+    //    }
+    //}
 
     m_units.clear();
 }

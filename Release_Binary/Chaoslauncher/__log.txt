@@ -110,3 +110,20 @@
 [10.09.2024 02:34:03] Injected into process "Chaoslauncher.exe"
 [10.09.2024 02:34:03] ICC module loaded
 [10.09.2024 03:33:24] ICC module unloaded
+[2024-09-10 09:47:00] ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+[2024-09-10 09:47:00] Injected into process "Chaoslauncher.exe"
+[2024-09-10 09:47:00] ICC module loaded
+[2024-09-22 16:36:35] ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+[2024-09-22 16:36:35] Injected into process "Chaoslauncher.exe"
+[2024-09-22 16:36:35] ICC module loaded
+[2024-09-22 16:37:18] ICC module unloaded
+[2024-09-22 16:37:18] ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+[2024-09-22 16:37:18] Injected into process "Chaoslauncher.exe"
+[2024-09-22 16:37:18] ICC module loaded
+[2024-09-23 18:49:09] ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+[2024-09-23 18:49:09] Injected into process "Chaoslauncher.exe"
+[2024-09-23 18:49:09] ICC module loaded
+[2024-09-23 19:34:43] ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+[2024-09-23 19:34:43] Injected into process "Chaoslauncher.exe"
+[2024-09-23 19:34:43] ICC module loaded
+[2024-09-23 22:29:25] ICC module unloaded

@@ -80,7 +80,7 @@ void CoCBot::ExampleAIModule::onFrame()
 		return;
 
 	// Iterate through all the units that we own
-	if (atkcmd == false)
+	//if (atkcmd == false)
 	{
 		GO.update();
 		atkcmd = true;
