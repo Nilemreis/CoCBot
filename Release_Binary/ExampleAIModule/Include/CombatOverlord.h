@@ -1,7 +1,13 @@
 #pragma once
+#include "Global.h"
 #include "Includes.h"
 #include "Squads.h"
+#include "MapTools.h"
+#include "InformationManager.h"
+#include "BaseLocationManager.h"
+#include "UnitData.h"
 #include "UnitState.h"
+
 
 namespace CoCBot
 {
@@ -29,6 +35,8 @@ namespace CoCBot
 		BWAPI::Unit     findClosestWorkerToTarget(BWAPI::Unitset& unitsToAssign, BWAPI::Unit target);
 		BWAPI::Position getDefendLocation();
 		BWAPI::Position getMainAttackLocation();
+		BWAPI::Position getSecondaryAttackLocation();
+		BWAPI::Position getThirdAttackLocation();
 
 	public:
 

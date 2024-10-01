@@ -31,7 +31,7 @@ void Global::init()
     reset(m_informationManager);
     //reset(m_workerManager);
     //reset(m_productionManager);
-    //reset(m_baseLocationManager);
+    reset(m_baseLocationManager);
     //reset(m_strategyManager);
     //reset(m_scoutManager);
 }

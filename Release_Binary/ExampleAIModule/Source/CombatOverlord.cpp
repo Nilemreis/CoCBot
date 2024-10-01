@@ -22,10 +22,10 @@ void CombatOverlord::initializeSquads()
 	SquadOrder mainAttackOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
 	m_squads.addSquad("MainAttack", SquadCommander("MainAttack", mainAttackOrder, AttackPriority, *m_commandUnits.begin() + 1));
 
-	SquadOrder secondaryAttackOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
+	SquadOrder secondaryAttackOrder(SquadOrderTypes::Attack, getSecondaryAttackLocation(), 800, "Attack Enemy Base");
 	m_squads.addSquad("SecondAttack", SquadCommander("SecondAttack", secondaryAttackOrder, AttackPriority, *m_commandUnits.begin() + 2));
 
-	SquadOrder thirdAttackOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
+	SquadOrder thirdAttackOrder(SquadOrderTypes::Attack, getThirdAttackLocation(), 800, "Attack Enemy Base");
 	m_squads.addSquad("ThirdAttack", SquadCommander("ThirdAttack", thirdAttackOrder, AttackPriority, *m_commandUnits.begin() + 3));
 
 	BWAPI::Position ourBasePosition = BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation());
@@ -115,9 +115,9 @@ void CombatOverlord::updateAttackSquads()
 		int theThirdPart = unitsType.size() / 3;
 		BWAPI::Unitset::iterator iter = unitsType.begin();
 		//for (auto& unit : unitsType)
-		for (int i = 0; i <= theThirdPart; i++)
+		for (int i = 0; i < theThirdPart; i++)
 		{
-		   // get every unit of a lower priority and put it into the attack squad
+			// get every unit of a lower priority and put it into the attack squad
 			if (/*!unit->getType().isWorker() && (unit->getType() != BWAPI::UnitTypes::Zerg_Overlord) &&*/ m_squads.canAssignUnitToSquad(*iter, mainAttackSquad))
 			{
 				m_squads.assignUnitToSquad(*iter, mainAttackSquad);
@@ -142,8 +142,8 @@ void CombatOverlord::updateAttackSquads()
 		int theThirdPart = unitsType.size() / 3;
 		BWAPI::Unitset::iterator iter = unitsType.begin();
 		advance(iter, theThirdPart);
-		for (int i = theThirdPart; i <= 2 * theThirdPart; i++)
-		//for (auto& unit : unitsType)
+		for (int i = theThirdPart; i < 2 * theThirdPart; i++)
+			//for (auto& unit : unitsType)
 		{
 			// get every unit of a lower priority and put it into the attack squad
 			if (/*!unit->getType().isWorker() && (unit->getType() != BWAPI::UnitTypes::Zerg_Overlord) &&*/ m_squads.canAssignUnitToSquad(*iter, secondaryAttackSquad))
@@ -154,7 +154,7 @@ void CombatOverlord::updateAttackSquads()
 		}
 	}
 
-	SquadOrder secondaryAttackOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
+	SquadOrder secondaryAttackOrder(SquadOrderTypes::Attack, getSecondaryAttackLocation(), 800, "Attack Enemy Base");
 	secondaryAttackSquad.setSquadOrder(secondaryAttackOrder);
 
 	SquadCommander& thirdAttackSquad = m_squads.getSquad("ThirdAttack");
@@ -167,9 +167,9 @@ void CombatOverlord::updateAttackSquads()
 		//}
 		int theThirdPart = unitsType.size() / 3;
 		BWAPI::Unitset::iterator iter = unitsType.begin();
-		advance(iter, theThirdPart*2);
+		advance(iter, theThirdPart * 2);
 		for (int i = theThirdPart * 2; i < unitsType.size(); i++)
-		//for (auto& unit : unitsType)
+			//for (auto& unit : unitsType)
 		{
 			// get every unit of a lower priority and put it into the attack squad
 			if (/*!unit->getType().isWorker() && (unit->getType() != BWAPI::UnitTypes::Zerg_Overlord) &&*/ m_squads.canAssignUnitToSquad(*iter, thirdAttackSquad))
@@ -180,7 +180,7 @@ void CombatOverlord::updateAttackSquads()
 		}
 	}
 
-	SquadOrder thirdAttackOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
+	SquadOrder thirdAttackOrder(SquadOrderTypes::Attack, getThirdAttackLocation(), 800, "Attack Enemy Base");
 	thirdAttackSquad.setSquadOrder(thirdAttackOrder);
 }
 
@@ -420,18 +420,18 @@ void CombatOverlord::drawSquadInformation(int x, int y)
 
 BWAPI::Position CombatOverlord::getMainAttackLocation()
 {
-	//const BaseLocation* enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
-	const BWAPI::TilePosition enemyBaseLocation = BWAPI::Broodwar->enemy()->getStartLocation();
+	const BaseLocation* enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
+	//const BWAPI::TilePosition enemyBaseLocation = BWAPI::Broodwar->enemy()->getStartLocation();
 
 	// First choice: Attack an enemy region if we can see units inside it
 	if (enemyBaseLocation)
 	{
-		//BWAPI::Position enemyBasePosition = enemyBaseLocation->getPosition();
-		BWAPI::Position enemyBasePosition = BWAPI::Position(enemyBaseLocation);
+		BWAPI::Position enemyBasePosition = enemyBaseLocation->getPosition();
+		//BWAPI::Position enemyBasePosition = BWAPI::Position(enemyBaseLocation);
 
 		// get all known enemy units in the area
 		BWAPI::Unitset enemyUnitsInArea;
-		//Global::Map().getUnits(enemyUnitsInArea, enemyBasePosition, 800, false, true);
+		Global::Map().getUnits(enemyUnitsInArea, enemyBasePosition, 800, false, true);
 
 		bool onlyOverlords = true;
 		for (auto& unit : enemyUnitsInArea)
@@ -446,22 +446,22 @@ BWAPI::Position CombatOverlord::getMainAttackLocation()
 		{
 			if (!onlyOverlords)
 			{
-				//return enemyBaseLocation->getPosition();
-				return enemyBasePosition;
+				return enemyBaseLocation->getPosition();
+				//return enemyBasePosition;
 			}
 		}
 	}
 
 	// Second choice: Attack known enemy buildings
-	//for (const auto& kv : Global::Info().getUnitInfo(BWAPI::Broodwar->enemy()))
-	//{
-	//    const UnitInfo& ui = kv.second;
-	//
-	//    if (ui.type.isBuilding() && ui.lastPosition != BWAPI::Positions::None)
-	//    {
-	//        return ui.lastPosition;
-	//    }
-	//}
+	for (const auto& kv : Global::Info().getUnitInfo(BWAPI::Broodwar->enemy()))
+	{
+		const UnitInfo& ui = kv.second;
+
+		if (ui.type.isBuilding() /*&& UnitState::IsValidUnit(ui.unit)*/ && ui.lastPosition != BWAPI::Positions::None)
+		{
+			return ui.lastPosition;
+		}
+	}
 
 	// Third choice: Attack visible enemy units that aren't overlords
 	for (auto& unit : BWAPI::Broodwar->enemy()->getUnits())
@@ -478,7 +478,18 @@ BWAPI::Position CombatOverlord::getMainAttackLocation()
 	}
 
 	// Fourth choice: We can't see anything so explore the map attacking along the way
-	//return BWAPI::Position(Global::Map().getLeastRecentlySeenTile());
+	return BWAPI::Position(Global::Map().getLeastRecentlySeenTile());
+	srand(time(NULL));
+	return BWAPI::Position(rand() % 1000, rand() % 1000);
+}
+
+BWAPI::Position CombatOverlord::getSecondaryAttackLocation()
+{
+	return BWAPI::Position(BWAPI::Broodwar->enemy()->getStartLocation());
+}
+
+BWAPI::Position CombatOverlord::getThirdAttackLocation()
+{
 	srand(time(NULL));
 	return BWAPI::Position(rand() % 1000, rand() % 1000);
 }
