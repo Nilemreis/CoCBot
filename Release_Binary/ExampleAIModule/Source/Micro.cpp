@@ -11,7 +11,7 @@ using namespace CoCBot;
 
     const int dotRadius = 2;
 
-    void  CocBot::Micro::SmartAttackUnit(BWAPI::Unit attacker, BWAPI::Unit target)
+    void  CoCBot::Micro::SmartAttackUnit(BWAPI::Unit attacker, BWAPI::Unit target)
     {
         UAB_ASSERT(attacker, "SmartAttackUnit: Attacker not valid");
         UAB_ASSERT(target, "SmartAttackUnit: Target not valid");
@@ -48,10 +48,10 @@ using namespace CoCBot;
         }
     }
 
-    void CocBot::Micro::SmartAttackMove(BWAPI::Unit attacker, const BWAPI::Position& targetPosition)
+    void CoCBot::Micro::SmartAttackMove(BWAPI::Unit attacker, const BWAPI::Position& targetPosition)
     {
-        //UAB_ASSERT(attacker, "SmartAttackMove: Attacker not valid");
-        //UAB_ASSERT(targetPosition.isValid(), "SmartAttackMove: targetPosition not valid");
+        UAB_ASSERT(attacker, "SmartAttackMove: Attacker not valid");
+        UAB_ASSERT(targetPosition.isValid(), "SmartAttackMove: targetPosition not valid");
 
         if (!attacker || !targetPosition.isValid())
         {
@@ -85,10 +85,10 @@ using namespace CoCBot;
         }
     }
 
-    void CocBot::Micro::SmartMove(BWAPI::Unit attacker, const BWAPI::Position& targetPosition)
+    void CoCBot::Micro::SmartMove(BWAPI::Unit attacker, const BWAPI::Position& targetPosition)
     {
-        //UAB_ASSERT(attacker, "SmartAttackMove: Attacker not valid");
-        //UAB_ASSERT(targetPosition.isValid(), "SmartAttackMove: targetPosition not valid");
+        UAB_ASSERT(attacker, "SmartAttackMove: Attacker not valid");
+        UAB_ASSERT(targetPosition.isValid(), "SmartAttackMove: targetPosition not valid");
 
         if (!attacker || !targetPosition.isValid())
         {
@@ -221,66 +221,66 @@ using namespace CoCBot;
     }
 
 
-    //void SmartKiteTarget(BWAPI::Unit rangedUnit, BWAPI::Unit target)
-    //{
-    //    UAB_ASSERT(rangedUnit, "SmartKiteTarget: Unit not valid");
-    //    UAB_ASSERT(target, "SmartKiteTarget: Target not valid");
-    //
-    //    if (!rangedUnit || !target)
-    //    {
-    //        return;
-    //    }
-    //
-    //    double range(rangedUnit->getType().groundWeapon().maxRange());
-    //    if (rangedUnit->getType() == BWAPI::UnitTypes::Protoss_Dragoon && BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::Singularity_Charge))
-    //    {
-    //        range = 6*32;
-    //    }
-    //
-    //    // determine whether the target can be kited
-    //    bool kiteLonger = Config::Micro::KiteLongerRangedUnits.find(rangedUnit->getType()) != Config::Micro::KiteLongerRangedUnits.end();
-    //    if (!kiteLonger && (range <= target->getType().groundWeapon().maxRange()))
-    //    {
-    //        // if we can't kite it, there's no point
-    //        Micro::SmartAttackUnit(rangedUnit, target);
-    //        return;
-    //    }
-    //
-    //    bool    kite(true);
-    //    double  dist(rangedUnit->getDistance(target));
-    //    double  speed(rangedUnit->getType().topSpeed());
-    //
-    //
-    //    // if the unit can't attack back don't kite
-    //    if ((rangedUnit->isFlying() && !UnitUtil::CanAttackAir(target)) || (!rangedUnit->isFlying() && !UnitUtil::CanAttackGround(target)))
-    //    {
-    //        //kite = false;
-    //    }
-    //
-    //    double timeToEnter = std::max(0.0, (dist - range) / speed);
-    //    if ((timeToEnter >= rangedUnit->getGroundWeaponCooldown()))
-    //    {
-    //        kite = false;
-    //    }
-    //
-    //    if (target->getType().isBuilding())
-    //    {
-    //        kite = false;
-    //    }
-    //
-    //    // if we can't shoot, run away
-    //    if (kite)
-    //    {
-    //        BWAPI::Position fleePosition(rangedUnit->getPosition() - target->getPosition() + rangedUnit->getPosition());
-    //        //BWAPI::Broodwar->drawLineMap(rangedUnit->getPosition(), fleePosition, BWAPI::Colors::Cyan);
-    //        Micro::SmartMove(rangedUnit, fleePosition);
-    //    }
-    //    // otherwise shoot
-    //    else
-    //    {
-    //        Micro::SmartAttackUnit(rangedUnit, target);
-    //    }
-    //}
+    void SmartKiteTarget(BWAPI::Unit rangedUnit, BWAPI::Unit target)
+    {
+        UAB_ASSERT(rangedUnit, "SmartKiteTarget: Unit not valid");
+        UAB_ASSERT(target, "SmartKiteTarget: Target not valid");
+    
+        if (!rangedUnit || !target)
+        {
+            return;
+        }
+    
+        double range(rangedUnit->getType().groundWeapon().maxRange());
+        if (rangedUnit->getType() == BWAPI::UnitTypes::Protoss_Dragoon && BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::Singularity_Charge))
+        {
+            range = 6*32;
+        }
+    
+        // determine whether the target can be kited
+        //bool kiteLonger = Config::Micro::KiteLongerRangedUnits.find(rangedUnit->getType()) != Config::Micro::KiteLongerRangedUnits.end();
+        //if (!kiteLonger && (range <= target->getType().groundWeapon().maxRange()))
+        //{
+        //    // if we can't kite it, there's no point
+        //    Micro::SmartAttackUnit(rangedUnit, target);
+        //    return;
+        //}
+    
+        bool    kite(true);
+        double  dist(rangedUnit->getDistance(target));
+        double  speed(rangedUnit->getType().topSpeed());
+    
+    
+        // if the unit can't attack back don't kite
+        if ((rangedUnit->isFlying() && !UnitState::CanAttackAir(target)) || (!rangedUnit->isFlying() && !UnitState::CanAttackGround(target)))
+        {
+            //kite = false;
+        }
+    
+        double timeToEnter = std::max(0.0, (dist - range) / speed);
+        if ((timeToEnter >= rangedUnit->getGroundWeaponCooldown()))
+        {
+            kite = false;
+        }
+    
+        if (target->getType().isBuilding())
+        {
+            kite = false;
+        }
+    
+        // if we can't shoot, run away
+        if (kite)
+        {
+            BWAPI::Position fleePosition(rangedUnit->getPosition() - target->getPosition() + rangedUnit->getPosition());
+            //BWAPI::Broodwar->drawLineMap(rangedUnit->getPosition(), fleePosition, BWAPI::Colors::Cyan);
+            Micro::SmartMove(rangedUnit, fleePosition);
+        }
+        // otherwise shoot
+        else
+        {
+            Micro::SmartAttackUnit(rangedUnit, target);
+        }
+    }
 
 
     void MutaDanceTarget(BWAPI::Unit muta, BWAPI::Unit target)

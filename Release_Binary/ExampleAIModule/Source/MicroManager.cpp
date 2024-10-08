@@ -5,15 +5,16 @@
 #include "include/InformationManager.h"
 #include "include/Micro.h"
 
-using namespace CocBot;
+using namespace CoCBot;
 
 MicroManager::MicroManager()
 {
 }
 
-void MicroManager::setUnits(const BWAPI::Unitset & u)
+void MicroManager::setUnits(const BWAPI::Unitset & u, const BWAPI::Unit& cmdr)
 {
     m_units = u;
+    m_commander = cmdr;
 }
 
 BWAPI::Position MicroManager::calcCenter() const
@@ -37,6 +38,8 @@ BWAPI::Position MicroManager::calcCenter() const
 
 void MicroManager::execute(const CoCBot::SquadOrder & inputOrder)
 {
+    //m_commander->move(m_units.getPosition());
+    Micro::SmartMove(m_commander, m_units.getPosition());
     // Nothing to do if we have no units
     if (m_units.empty() || !(inputOrder.getType() == CoCBot::SquadOrderTypes::Attack || inputOrder.getType() == CoCBot::SquadOrderTypes::Defend))
     {
@@ -121,6 +124,11 @@ const BWAPI::Unitset & MicroManager::getUnits() const
 {
     return m_units;
 }
+
+//const BWAPI::Unitset& MicroManager::getUnits() const
+//{
+//    return m_units;
+//}
 
 void MicroManager::regroup(const BWAPI::Position & regroupPosition) const
 {

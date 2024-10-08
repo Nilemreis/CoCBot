@@ -2,7 +2,7 @@
 
 #include <BWAPI.h>
 
-namespace CocBot
+namespace CoCBot
 {
 namespace Micro
 {      

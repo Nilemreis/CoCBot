@@ -5,7 +5,7 @@
 
 namespace CoCBot
 {
-class RangedManager : public CocBot::MicroManager
+class RangedManager : public CoCBot::MicroManager
 {
 public:
 

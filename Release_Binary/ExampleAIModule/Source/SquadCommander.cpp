@@ -188,7 +188,7 @@ void SquadCommander::addUnitsToMicroManagers()
     }
 
     //m_meleeManager.setUnits(meleeUnits);
-    m_rangedManager.setUnits(rangedUnits);
+    m_rangedManager.setUnits(rangedUnits, m_commander);
     //m_detectorManager.setUnits(detectorUnits);
     //m_transportManager.setUnits(transportUnits);
     //m_tankManager.setUnits(tankUnits);

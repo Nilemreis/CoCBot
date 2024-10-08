@@ -19,14 +19,15 @@ void CombatOverlord::initializeSquads()
 	//m_squads.addSquad("Idle", SquadCommander("Idle", idleOrder, IdlePriority));
 
 	// the main attack squad that will pressure the enemy's closest base location
+	BWAPI::Unitset::iterator it = m_commandUnits.begin();
 	SquadOrder mainAttackOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
-	m_squads.addSquad("MainAttack", SquadCommander("MainAttack", mainAttackOrder, AttackPriority, *m_commandUnits.begin() + 1));
+	m_squads.addSquad("MainAttack", SquadCommander("MainAttack", mainAttackOrder, AttackPriority, *it++));
 
 	SquadOrder secondaryAttackOrder(SquadOrderTypes::Attack, getSecondaryAttackLocation(), 800, "Attack Enemy Base");
-	m_squads.addSquad("SecondAttack", SquadCommander("SecondAttack", secondaryAttackOrder, AttackPriority, *m_commandUnits.begin() + 2));
+	m_squads.addSquad("SecondAttack", SquadCommander("SecondAttack", secondaryAttackOrder, AttackPriority, *it++));
 
 	SquadOrder thirdAttackOrder(SquadOrderTypes::Attack, getThirdAttackLocation(), 800, "Attack Enemy Base");
-	m_squads.addSquad("ThirdAttack", SquadCommander("ThirdAttack", thirdAttackOrder, AttackPriority, *m_commandUnits.begin() + 3));
+	m_squads.addSquad("ThirdAttack", SquadCommander("ThirdAttack", thirdAttackOrder, AttackPriority, *it++));
 
 	BWAPI::Position ourBasePosition = BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation());
 

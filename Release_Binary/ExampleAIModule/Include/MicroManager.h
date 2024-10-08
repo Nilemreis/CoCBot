@@ -3,7 +3,7 @@
 #include "Includes.h"
 #include "SquadOrders.h"
 
-namespace CocBot
+namespace CoCBot
 {
 struct AirThreat
 {
@@ -20,6 +20,7 @@ struct GroundThreat
 class MicroManager
 {
     BWAPI::Unitset  m_units;
+    BWAPI::Unit m_commander;
 
 protected:
     CoCBot::SquadOrder m_order;
@@ -39,7 +40,7 @@ public:
     const BWAPI::Unitset & getUnits() const;
     BWAPI::Position calcCenter() const;
 
-    void setUnits(const BWAPI::Unitset & u);
+    void setUnits(const BWAPI::Unitset & u, const BWAPI::Unit& cmdr);
     void execute(const CoCBot::SquadOrder & order);
     void regroup(const BWAPI::Position & regroupPosition) const;
 

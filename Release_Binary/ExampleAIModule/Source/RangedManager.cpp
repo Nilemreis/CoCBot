@@ -56,7 +56,7 @@ void RangedManager::assignTargetsOld(const BWAPI::Unitset & targets)
                 //}
                 //else
                 {
-	                CocBot::Micro::SmartAttackUnit(rangedUnit, target);
+	                CoCBot::Micro::SmartAttackUnit(rangedUnit, target);
                 }
             }
             // if there are no targets
@@ -66,7 +66,7 @@ void RangedManager::assignTargetsOld(const BWAPI::Unitset & targets)
                 if (rangedUnit->getDistance(m_order.getPosition()) > 100)
                 {
                     // move to it
-                    CocBot::Micro::SmartAttackMove(rangedUnit, m_order.getPosition());
+                    CoCBot::Micro::SmartAttackMove(rangedUnit, m_order.getPosition());
                 }
             }
         }
@@ -267,7 +267,7 @@ void RangedManager::assignTargetsNew(const BWAPI::Unitset & targets)
 
         if (!target)
         {
-	        CocBot::Micro::SmartAttackMove(attacker, m_order.getPosition());
+	        CoCBot::Micro::SmartAttackMove(attacker, m_order.getPosition());
             continue;
         }
 
@@ -284,7 +284,7 @@ void RangedManager::assignTargetsNew(const BWAPI::Unitset & targets)
         //}
         //else
         {
-	        CocBot::Micro::SmartAttackUnit(attacker, target);
+	        CoCBot::Micro::SmartAttackUnit(attacker, target);
         }
 
         // update the number of units assigned to attack the target we found
@@ -313,7 +313,7 @@ void RangedManager::assignTargetsNew(const BWAPI::Unitset & targets)
             if (unit->getDistance(m_order.getPosition()) > 100)
             {
                 // move to it
-                CocBot::Micro::SmartAttackMove(unit, m_order.getPosition());
+                CoCBot::Micro::SmartAttackMove(unit, m_order.getPosition());
             }
         }
     }
