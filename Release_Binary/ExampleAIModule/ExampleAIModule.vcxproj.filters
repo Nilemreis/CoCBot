@@ -10,6 +10,15 @@
     <ClCompile Include="Source\UnitState.cpp" />
     <ClCompile Include="Source\UABAssert.cpp" />
     <ClCompile Include="Source\UnitData.cpp" />
+    <ClCompile Include="Source\BaseLocation.cpp" />
+    <ClCompile Include="Source\BaseLocationManager.cpp" />
+    <ClCompile Include="Source\DistanceMap.cpp" />
+    <ClCompile Include="Source\Global.cpp" />
+    <ClCompile Include="Source\InformationManager.cpp" />
+    <ClCompile Include="Source\MapTools.cpp" />
+    <ClCompile Include="Source\Micro.cpp" />
+    <ClCompile Include="Source\MicroManager.cpp" />
+    <ClCompile Include="Source\RangedManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\CombatOverlord.h" />
@@ -21,23 +30,33 @@
     <ClInclude Include="include\Squads.h" />
     <ClInclude Include="Include\UnitState.h" />
     <ClInclude Include="stardraft\BaseBorderFinder.hpp">
-      <Filter>Stardtaft</Filter>
+      <Filter>Stardraft</Filter>
     </ClInclude>
     <ClInclude Include="stardraft\StarDraftMap.hpp">
-      <Filter>Stardtaft</Filter>
+      <Filter>Stardraft</Filter>
     </ClInclude>
     <ClInclude Include="stardraft\Grid2D.hpp">
-      <Filter>Stardtaft</Filter>
+      <Filter>Stardraft</Filter>
     </ClInclude>
     <ClInclude Include="stardraft\StarDraft.h">
-      <Filter>Stardtaft</Filter>
+      <Filter>Stardraft</Filter>
     </ClInclude>
     <ClInclude Include="Include\Profiler.hpp" />
     <ClInclude Include="Include\UABAssert.h" />
     <ClInclude Include="Include\UnitData.h" />
+    <ClInclude Include="Include\BaseLocation.h" />
+    <ClInclude Include="Include\BaseLocationManager.h" />
+    <ClInclude Include="Include\DistanceMap.h" />
+    <ClInclude Include="Include\Global.h" />
+    <ClInclude Include="Include\Grid.hpp" />
+    <ClInclude Include="Include\InformationManager.h" />
+    <ClInclude Include="Include\MapTools.h" />
+    <ClInclude Include="Include\Micro.h" />
+    <ClInclude Include="Include\MicroManager.h" />
+    <ClInclude Include="Include\RangedManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Stardtaft">
+    <Filter Include="Stardraft">
       <UniqueIdentifier>{d9174c2d-b433-4461-929d-83829763835b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

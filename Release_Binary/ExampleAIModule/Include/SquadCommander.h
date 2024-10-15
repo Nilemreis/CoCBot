@@ -38,9 +38,11 @@ namespace CoCBot
         void addUnitsToMicroManagers();
         void setNearEnemyUnits();
         void setAllUnits();
+        
 
         bool unitNearEnemy(BWAPI::Unit unit);
         bool needsToRegroup();
+        bool checkFormation();
         int  squadUnitsNear(BWAPI::Position p);
 
     public:

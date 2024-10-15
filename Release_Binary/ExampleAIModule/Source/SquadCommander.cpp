@@ -38,6 +38,7 @@ void SquadCommander::update()
 
     //// determine whether or not we should regroup
     bool needToRegroup = needsToRegroup();
+    bool loseFormation = checkFormation();
 
     //// draw some debug info
     //if (Config::Debug::DrawSquadInfo && m_order.getType() == SquadOrderTypes::Attack)
@@ -64,6 +65,12 @@ void SquadCommander::update()
     //    m_tankManager.regroup(regroupPosition);
     //    m_medicManager.regroup(regroupPosition);
     }
+
+    if (loseFormation)
+    {
+        m_rangedManager.tighten(calcCenter());
+    }
+
     //else // otherwise, execute micro
     {
     //    m_meleeManager.execute(m_order);
@@ -297,6 +304,18 @@ bool SquadCommander::needsToRegroup()
     }
 
     return retreat;
+}
+
+bool SquadCommander::checkFormation()
+{
+    for (const auto& unit : m_units)
+    {
+        if (CoCBot::Global::Map().getGroundDistance(unit->getPosition(), m_units.getPosition()) > 10)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 void SquadCommander::setSquadOrder(const SquadOrder& so)

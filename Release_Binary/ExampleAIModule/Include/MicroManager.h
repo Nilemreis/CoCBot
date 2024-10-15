@@ -42,7 +42,8 @@ public:
 
     void setUnits(const BWAPI::Unitset & u, const BWAPI::Unit& cmdr);
     void execute(const CoCBot::SquadOrder & order);
-    void regroup(const BWAPI::Position & regroupPosition) const;
+    void regroup(const BWAPI::Position &regroupPosition) const;
+    void tighten(const BWAPI::Position &tightenFormation);
 
 };
 }
