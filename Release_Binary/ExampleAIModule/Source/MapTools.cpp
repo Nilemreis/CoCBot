@@ -408,9 +408,11 @@ BWAPI::TilePosition MapTools::getLeastRecentlySeenTile() const
     int minSeen = std::numeric_limits<int>::max();
     BWAPI::TilePosition leastSeen;
     const BaseLocation * baseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self());
-    UAB_ASSERT(baseLocation, "Null self baselocation is insanely bad");
+    //UAB_ASSERT(baseLocation, "Null self baselocation is insanely bad");
+    DistanceMap m_distanceMap = DistanceMap();
+    m_distanceMap.computeDistanceMap(BWAPI::TilePosition(BWAPI::Broodwar->self()->getStartLocation()));
 
-    for (auto & tile : baseLocation->getClosestTiles())
+    for (auto & tile : /*baseLocation->getClosestTiles()*/m_distanceMap.getSortedTiles())
     {
         UAB_ASSERT(isValidTile(tile), "How is this tile not valid?");
 

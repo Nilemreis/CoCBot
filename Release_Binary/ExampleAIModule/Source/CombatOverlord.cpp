@@ -11,26 +11,38 @@ const size_t DropPriority = 4;
 CombatOverlord::CombatOverlord()
 {
 
+	//m_ordersList.push_back(SquadOrder(SquadOrderTypes::Attack, BWAPI::Position(0, 0), 800, "inactive", "Attack Enemy Base"));
+	//m_ordersList.push_back(SquadOrder(SquadOrderTypes::Attack, BWAPI::Position(0, 0), 800, "inactive", "Attack Enemy Starting Position"));
+	//m_ordersList.push_back(SquadOrder(SquadOrderTypes::Idle, BWAPI::Position(0, 0), 800, "inactive", "Patrol Map"));
+	//m_ordersList.push_back(SquadOrder(SquadOrderTypes::Regroup, getDefendLocation(), 800, "inactive", "Regroup"));
 }
 
 void CombatOverlord::initializeSquads()
 {
 	//SquadOrder idleOrder(SquadOrderTypes::Idle, BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation()), 100, "Chill Out");
 	//m_squads.addSquad("Idle", SquadCommander("Idle", idleOrder, IdlePriority));
-
+	m_ordersList.push_back(SquadOrder(SquadOrderTypes::Regroup, getDefendLocation(), 800, "inactive", "Regroup"));
+	m_ordersList.push_back(SquadOrder(SquadOrderTypes::Idle, getThirdAttackLocation(), 800, "inactive", "Patrol Map"));
+	m_ordersList.push_back(SquadOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "inactive", "Attack Enemy Base"));
+	m_ordersList.push_back(SquadOrder(SquadOrderTypes::Attack, getSecondaryAttackLocation(), 800, "inactive", "Attack Enemy Starting Position"));
 	// the main attack squad that will pressure the enemy's closest base location
 	BWAPI::Unitset::iterator it = m_commandUnits.begin();
-	SquadOrder mainAttackOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
+	SquadOrder mainAttackOrder = m_ordersList[3];
+	mainAttackOrder.Assigned();
+	m_ordersList[3].Assigned();
 	m_squads.addSquad("MainAttack", SquadCommander("MainAttack", mainAttackOrder, AttackPriority, *it++));
 
-	SquadOrder secondaryAttackOrder(SquadOrderTypes::Attack, getSecondaryAttackLocation(), 800, "Attack Enemy Base");
+	SquadOrder secondaryAttackOrder = m_ordersList[2];
+	secondaryAttackOrder.Assigned();
+	m_ordersList[2].Assigned();
 	m_squads.addSquad("SecondAttack", SquadCommander("SecondAttack", secondaryAttackOrder, AttackPriority, *it++));
 
-	SquadOrder thirdAttackOrder(SquadOrderTypes::Attack, getThirdAttackLocation(), 800, "Attack Enemy Base");
+	SquadOrder thirdAttackOrder = m_ordersList[1];
+	thirdAttackOrder.Assigned();
+	m_ordersList[1].Assigned();
 	m_squads.addSquad("ThirdAttack", SquadCommander("ThirdAttack", thirdAttackOrder, AttackPriority, *it++));
 
 	BWAPI::Position ourBasePosition = BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation());
-
 	// the scout defense squad will handle chasing the enemy worker scout
 	//SquadOrder enemyScoutDefense(SquadOrderTypes::Defend, ourBasePosition, 900, "Get the scout");
 	//m_squads.addSquad("ScoutDefense", SquadCommander("ScoutDefense", enemyScoutDefense, ScoutDefensePriority));
@@ -127,10 +139,10 @@ void CombatOverlord::updateAttackSquads()
 
 		}
 	}
-	BWAPI::Broodwar << m_squads.getSquad("MainAttack").getUnits().size() << "frsdasst" << std::endl;
-
-	SquadOrder mainAttackOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
-	mainAttackSquad.setSquadOrder(mainAttackOrder);
+	//BWAPI::Broodwar << m_squads.getSquad("MainAttack").getUnits().size() << "frsdasst" << std::endl;
+	//
+	//SquadOrder mainAttackOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
+	//mainAttackSquad.setSquadOrder(mainAttackOrder);
 
 	SquadCommander& secondaryAttackSquad = m_squads.getSquad("SecondAttack");
 
@@ -155,8 +167,8 @@ void CombatOverlord::updateAttackSquads()
 		}
 	}
 
-	SquadOrder secondaryAttackOrder(SquadOrderTypes::Attack, getSecondaryAttackLocation(), 800, "Attack Enemy Base");
-	secondaryAttackSquad.setSquadOrder(secondaryAttackOrder);
+	//SquadOrder secondaryAttackOrder(SquadOrderTypes::Attack, getSecondaryAttackLocation(), 800, "Attack Enemy Base");
+	//secondaryAttackSquad.setSquadOrder(secondaryAttackOrder);
 
 	SquadCommander& thirdAttackSquad = m_squads.getSquad("ThirdAttack");
 
@@ -181,8 +193,44 @@ void CombatOverlord::updateAttackSquads()
 		}
 	}
 
-	SquadOrder thirdAttackOrder(SquadOrderTypes::Attack, getThirdAttackLocation(), 800, "Attack Enemy Base");
-	thirdAttackSquad.setSquadOrder(thirdAttackOrder);
+	//SquadOrder thirdAttackOrder(SquadOrderTypes::Attack, getThirdAttackLocation(), 800, "Attack Enemy Base");
+	//thirdAttackSquad.setSquadOrder(thirdAttackOrder);
+
+	for (auto& squad : m_squads.getSquads())
+	{
+		if (squad.second.getSquadOrder().getName() == "Patrol Map")
+		{
+			thirdAttackSquad.setSquadOrder(SquadOrder(SquadOrderTypes::Attack, getThirdAttackLocation(), 800, "assigned", "Patrol Map"));
+		}
+		if (squad.second.getSquadOrder().getStatus() == "completed")
+		{
+			for (auto& order : m_ordersList)
+			{
+				if (order.getName() == squad.second.getSquadOrder().getName())
+				{
+					order.Completed();
+				}
+			}
+		}
+	}
+	for (auto& squad : m_squads.getSquads())
+	{
+		if (squad.second.getSquadOrder().getStatus() == "completed")
+		{
+			for (auto& order : m_ordersList)
+			{
+				if (order.getStatus() != "completed")
+				{
+					SquadCommander& squadm = m_squads.getSquad(squad.second.getName());
+					squadm.setSquadOrder(order);
+					if (order.getStatus() == "inactive")
+					{
+						order.Assigned();
+					}
+				}
+			}
+		}
+	}
 }
 
 void CombatOverlord::updateDefenseSquads()

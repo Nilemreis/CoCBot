@@ -67,5 +67,6 @@ namespace CoCBot
 
         const BWAPI::Unitset& getUnits() const;
         const SquadOrder& getSquadOrder()	const;
+        void checkOrder();
     };
 }

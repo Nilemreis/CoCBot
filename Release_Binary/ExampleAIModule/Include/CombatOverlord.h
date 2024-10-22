@@ -18,12 +18,13 @@ namespace CoCBot
 		BWAPI::Unitset  m_commandUnits;
 		bool            m_initialized = false;
 		std::list<BWAPI::Unitset> m_unitTypesList;
-
+		std::vector<SquadOrder> m_ordersList;
 
 		void updateDefenseSquads();
 		void updateAttackSquads();
 		void updateIdleSquad();
 		void initializeSquads();
+		void assignOrders();
 		//void updateDefenseSquadUnits(SquadCommander& defenseSquad, const size_t& flyingDefendersNeeded, const size_t& groundDefendersNeeded);
 
 		int  defendWithWorkers();
