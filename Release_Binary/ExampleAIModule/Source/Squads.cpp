@@ -57,7 +57,7 @@ void Squads::removeSquad(const std::string& squadName)
     m_squads.erase(squadName);
 }
 
-const std::map<std::string, SquadCommander>& Squads::getSquads() const
+std::map<std::string, SquadCommander>& Squads::getSquads()
 {
     return m_squads;
 }

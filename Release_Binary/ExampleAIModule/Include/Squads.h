@@ -30,6 +30,6 @@ namespace CoCBot
         const SquadCommander* getUnitSquad(BWAPI::Unit unit) const;
         SquadCommander* getUnitSquad(BWAPI::Unit unit);
         SquadCommander& getSquad(const std::string& squadName);
-        const std::map<std::string, SquadCommander>& getSquads() const;
+        std::map<std::string, SquadCommander>& getSquads();
     };
 }

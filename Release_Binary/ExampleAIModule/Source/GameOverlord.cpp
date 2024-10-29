@@ -6,7 +6,6 @@ using namespace CoCBot;
 GameOverlord::GameOverlord()
 	: m_initialScoutSet(false)
 {
-
 	handleUnitAssignments();
 }
 
@@ -100,6 +99,7 @@ void GameOverlord::handleUnitAssignments()
 {
 	BWAPI::Broodwar->drawTextScreen(400, 200, "initunit assingment");
 	m_validUnits.clear();
+	m_commandUnits.clear();
 	m_combatUnits.clear();
 
 	// filter our units for those which are valid and usable
@@ -172,7 +172,7 @@ void GameOverlord::setCombatUnits()
 	for (auto& unit : m_validUnits)
 	{
 		bl = true;
-		if (!isAssigned(unit) /*&& UnitState::IsCombatUnit(unit)*/)
+		if (!isAssigned(unit) && UnitState::IsCombatUnit(unit))
 		{
 			BWAPI::Unitset uSet;
 			if (m_unitTypesList.empty())
@@ -234,32 +234,32 @@ void GameOverlord::setCombatUnits()
 //	return supplyProvider;
 //}
 
-//void GameOverlord::onUnitShow(BWAPI::Unit unit)
-//{
-//	Global::Info().onUnitShow(unit);
-//	Global::Workers().onUnitShow(unit);
-//}
-//
-//void GameOverlord::onUnitHide(BWAPI::Unit unit)
-//{
-//	Global::Info().onUnitHide(unit);
-//}
-//
-//void GameOverlord::onUnitCreate(BWAPI::Unit unit)
-//{
-//	Global::Info().onUnitCreate(unit);
-//}
-//
-//void GameOverlord::onUnitComplete(BWAPI::Unit unit)
-//{
-//	Global::Info().onUnitComplete(unit);
-//}
-//
-//void GameOverlord::onUnitRenegade(BWAPI::Unit unit)
-//{
-//	Global::Info().onUnitRenegade(unit);
-//}
-//
+void GameOverlord::onUnitShow(BWAPI::Unit unit)
+{
+	Global::Info().onUnitShow(unit);
+	//Global::Workers().onUnitShow(unit);
+}
+
+void GameOverlord::onUnitHide(BWAPI::Unit unit)
+{
+	Global::Info().onUnitHide(unit);
+}
+
+void GameOverlord::onUnitCreate(BWAPI::Unit unit)
+{
+	Global::Info().onUnitCreate(unit);
+}
+
+void GameOverlord::onUnitComplete(BWAPI::Unit unit)
+{
+	Global::Info().onUnitComplete(unit);
+}
+
+void GameOverlord::onUnitRenegade(BWAPI::Unit unit)
+{
+	Global::Info().onUnitRenegade(unit);
+}
+
 void GameOverlord::onUnitDestroy(BWAPI::Unit unit)
 {
 	for (auto& unitSet : m_unitTypesList)
@@ -279,7 +279,7 @@ void GameOverlord::onUnitDestroy(BWAPI::Unit unit)
 	}
 	//	Global::Production().onUnitDestroy(unit);
 	//	Global::Workers().onUnitDestroy(unit);
-	//	Global::Info().onUnitDestroy(unit);
+		Global::Info().onUnitDestroy(unit);
 }
 //
 //void GameOverlord::onUnitMorph(BWAPI::Unit unit)

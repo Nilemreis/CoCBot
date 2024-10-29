@@ -21,8 +21,10 @@ namespace CoCBot
         bool                m_lastRetreatSwitchVal = false;
         size_t              m_priority = 0;
 		BWAPI::Unit			m_commander;
+		bool			    m_squadFighting;
 
         SquadOrder          m_order;
+        SquadOrder          m_tmpOrder;
         //MeleeManager        m_meleeManager;
         RangedManager       m_rangedManager;
         //DetectorManager     m_detectorManager;
@@ -67,6 +69,6 @@ namespace CoCBot
 
         const BWAPI::Unitset& getUnits() const;
         const SquadOrder& getSquadOrder()	const;
-        void checkOrder();
+        bool checkCompleted();
     };
 }

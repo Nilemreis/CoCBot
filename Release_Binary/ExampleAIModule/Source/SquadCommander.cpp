@@ -23,6 +23,7 @@ SquadCommander::SquadCommander(const std::string& name, SquadOrder order, size_t
 	, m_lastRetreatSwitchVal(false)
 	, m_priority(priority)
 	, m_commander(commander)
+	, m_tmpOrder(order)
 {
 }
 
@@ -48,7 +49,11 @@ void SquadCommander::update()
 	//    BWAPI::Unit closest = unitClosestToEnemy();
 	//}
 	//int a = CoCBot::Global::Map().getGroundDistance(calcCenter(), m_order.getPosition());
-	checkOrder();
+	;
+	if(checkCompleted())
+	{
+		return;
+	}
 	std::string s = m_order.getStatus();
 	// if we do need to regroup, do it
 	if (needToRegroup)
@@ -68,10 +73,13 @@ void SquadCommander::update()
 		//    m_medicManager.regroup(regroupPosition);
 	}
 
-	if (loseFormation)
+	if (loseFormation && !m_squadFighting)
 	{
+		m_order = SquadOrder(SquadOrderTypes::Tighten, calcCenter(), 50, "assigned", "Tighten Formation");
 		m_rangedManager.tighten(calcCenter());
 	}
+	setSquadOrder(m_tmpOrder);
+
 
 	//else // otherwise, execute micro
 	{
@@ -108,27 +116,28 @@ void SquadCommander::updateUnits()
 	addUnitsToMicroManagers();
 }
 
-void SquadCommander::checkOrder()
+bool SquadCommander::checkCompleted()
 {
-	if (m_order.getType() != 2)
-	{
-		return;
-	}
+	//if (m_order.getType() != 2)
+	//{
+	//	return false;
+	//}
 
 	for (auto& unit : m_units)
 	{
 		if (unit->isAttacking())
 		{
-			return;
+			return false;
 		}
 	}
 
 	if (sqrt((calcCenter().x - m_order.getPosition().x) * (calcCenter().x - m_order.getPosition().x) + (calcCenter().y - m_order.getPosition().y) * (calcCenter().y - m_order.getPosition().y)) < 100)
 	{
 		m_order.Completed();
+		return true;
 	}
 
-	return;
+	return false;
 }
 
 void SquadCommander::setAllUnits()
@@ -163,6 +172,7 @@ void SquadCommander::setNearEnemyUnits()
 		int bottom = unit->getType().dimensionDown();
 
 		m_nearEnemy[unit] = unitNearEnemy(unit);
+		m_squadFighting = unitNearEnemy(unit);
 		if (m_nearEnemy[unit])
 		{
 			//if (Config::Debug::DrawSquadInfo) BWAPI::Broodwar->drawBoxMap(x - left, y - top, x + right, y + bottom, Config::Debug::ColorUnitNearEnemy);
@@ -333,19 +343,27 @@ bool SquadCommander::needsToRegroup()
 
 bool SquadCommander::checkFormation()
 {
+	bool lostFormation = false;
 	for (const auto& unit : m_units)
 	{
-		if (CoCBot::Global::Map().getGroundDistance(unit->getPosition(), m_units.getPosition()) > 10)
+		if (CoCBot::Global::Map().getGroundDistance(unit->getPosition(), m_units.getPosition()) > 12)
+		{
+			return true;
+
+		}
+		if (m_order.getType() == SquadOrderTypes::Tighten && CoCBot::Global::Map().getGroundDistance(unit->getPosition(), m_units.getPosition()) > 7)
 		{
 			return true;
 		}
 	}
+
 	return false;
 }
 
 void SquadCommander::setSquadOrder(const SquadOrder& so)
 {
 	m_order = so;
+	m_tmpOrder = so;
 }
 
 bool SquadCommander::containsUnit(BWAPI::Unit u) const
@@ -372,7 +390,7 @@ bool SquadCommander::unitNearEnemy(BWAPI::Unit unit)
 
 	BWAPI::Unitset enemyNear;
 
-	//Global::Map().getUnits(enemyNear, unit->getPosition(), 400, false, true);
+	Global::Map().getUnits(enemyNear, unit->getPosition(), 400, false, true);
 
 	return enemyNear.size() > 0;
 }
@@ -438,13 +456,13 @@ BWAPI::Unit SquadCommander::unitClosestToEnemy()
 		}
 
 		// the distance to the order position
-		//int dist = Global::Map().getGroundDistance(unit->getPosition(), m_order.getPosition());
+		int dist = Global::Map().getGroundDistance(unit->getPosition(), m_order.getPosition());
 
-		//if (dist != -1 && (!closest || dist < closestDist))
-		//{
-		//    closest = unit;
-		//    closestDist = dist;
-		//}
+		if (dist != -1 && (!closest || dist < closestDist))
+		{
+			closest = unit;
+			closestDist = dist;
+		}
 	}
 
 	if (!closest)

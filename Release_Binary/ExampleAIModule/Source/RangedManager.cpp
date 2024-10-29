@@ -169,36 +169,39 @@ int RangedManager::getAttackPriority(BWAPI::Unit rangedUnit, BWAPI::Unit target)
         return 100;
     }
 
-    if (target->getType().isBuilding() && (target->isCompleted() || target->isBeingConstructed()) && target->getDistance(ourBasePosition) < 1200)
-    {
-        return 90;
-    }
-
     // highest priority is something that can attack us or aid in combat
     if (targetType ==  BWAPI::UnitTypes::Terran_Bunker || isThreat)
     {
         return 11;
     }
-    // next priority is worker
-    else if (targetType.isWorker())
-    {
-        if (rangedUnit->getType() == BWAPI::UnitTypes::Terran_Vulture)
-        {
-            return 11;
-        }
 
-        return 11;
+    // next priority is worker
+    if (targetType.isWorker())
+    {
+        //if (rangedUnit->getType() == BWAPI::UnitTypes::Terran_Vulture)
+        //{
+        //    return 95;
+        //}
+        return 10;
     }
+
+    if (target->getType().isBuilding() && (target->isCompleted() || target->isBeingConstructed()) && target->getDistance(ourBasePosition) < 1200)
+    {
+        return 9;
+    }
+
     // next is special buildings
     else if (targetType == BWAPI::UnitTypes::Zerg_Spawning_Pool)
     {
         return 5;
     }
+
     // next is special buildings
     else if (targetType == BWAPI::UnitTypes::Protoss_Pylon)
     {
         return 5;
     }
+
     // next is buildings that cost gas
     else if (targetType.gasPrice() > 0)
     {
@@ -208,6 +211,7 @@ int RangedManager::getAttackPriority(BWAPI::Unit rangedUnit, BWAPI::Unit target)
     {
         return 3;
     }
+
     // then everything else
     else
     {

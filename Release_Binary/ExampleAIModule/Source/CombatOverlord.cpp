@@ -22,7 +22,7 @@ void CombatOverlord::initializeSquads()
 	//SquadOrder idleOrder(SquadOrderTypes::Idle, BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation()), 100, "Chill Out");
 	//m_squads.addSquad("Idle", SquadCommander("Idle", idleOrder, IdlePriority));
 	m_ordersList.push_back(SquadOrder(SquadOrderTypes::Regroup, getDefendLocation(), 800, "inactive", "Regroup"));
-	m_ordersList.push_back(SquadOrder(SquadOrderTypes::Idle, getThirdAttackLocation(), 800, "inactive", "Patrol Map"));
+	m_ordersList.push_back(SquadOrder(SquadOrderTypes::Attack, getThirdAttackLocation(), 800, "inactive", "Patrol Map"));
 	m_ordersList.push_back(SquadOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "inactive", "Attack Enemy Base"));
 	m_ordersList.push_back(SquadOrder(SquadOrderTypes::Attack, getSecondaryAttackLocation(), 800, "inactive", "Attack Enemy Starting Position"));
 	// the main attack squad that will pressure the enemy's closest base location
@@ -198,17 +198,18 @@ void CombatOverlord::updateAttackSquads()
 
 	for (auto& squad : m_squads.getSquads())
 	{
-		if (squad.second.getSquadOrder().getName() == "Patrol Map")
-		{
-			thirdAttackSquad.setSquadOrder(SquadOrder(SquadOrderTypes::Attack, getThirdAttackLocation(), 800, "assigned", "Patrol Map"));
-		}
 		if (squad.second.getSquadOrder().getStatus() == "completed")
 		{
+			if (squad.second.getSquadOrder().getName() == "Patrol Map")
+			{
+				squad.second.setSquadOrder(SquadOrder(SquadOrderTypes::Attack, getThirdAttackLocation(), 800, "assigned", "Patrol Map"));
+			}
 			for (auto& order : m_ordersList)
 			{
 				if (order.getName() == squad.second.getSquadOrder().getName())
 				{
 					order.Completed();
+					//squad.second.
 				}
 			}
 		}

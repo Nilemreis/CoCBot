@@ -98,22 +98,22 @@ void MicroManager::execute(const CoCBot::SquadOrder& inputOrder)
 				for (auto& enemyUnit : nearbyEnemies)
 				{
 					// if its not a worker add it to the targets
-					if (!enemyUnit->getType().isWorker())
-					{
+					//if (!enemyUnit->getType().isWorker())
+					//{
 						workersRemoved.insert(enemyUnit);
-					}
+					//}
 					// if it is a worker
-					else
-					{
-						for (auto enemyBase : CoCBot::Global::Bases().getOccupiedBaseLocations(BWAPI::Broodwar->enemy()))
-						{
-							// only add it if it's in their region
-							if (enemyBase->containsPosition(enemyUnit->getPosition()))
-							{
-								workersRemoved.insert(enemyUnit);
-							}
-						}
-					}
+					//else
+					//{
+					//	for (auto enemyBase : CoCBot::Global::Bases().getOccupiedBaseLocations(BWAPI::Broodwar->enemy()))
+					//	{
+					//		// only add it if it's in their region
+					//		if (enemyBase->containsPosition(enemyUnit->getPosition()))
+					//		{
+					//			workersRemoved.insert(enemyUnit);
+					//		}
+					//	}
+					//}
 				}
 
 				// Allow micromanager to handle enemies
