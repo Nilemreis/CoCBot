@@ -13,6 +13,7 @@ namespace CoCBot
 {
 	class CombatOverlord
 	{
+		BWAPI::Unit     m_mainCommander;
 		Squads          m_squads;
 		BWAPI::Unitset  m_combatUnits;
 		BWAPI::Unitset  m_commandUnits;
@@ -25,11 +26,12 @@ namespace CoCBot
 		void updateIdleSquad();
 		void initializeSquads();
 		void assignOrders();
+		void emergencyReaction();
 		//void updateDefenseSquadUnits(SquadCommander& defenseSquad, const size_t& flyingDefendersNeeded, const size_t& groundDefendersNeeded);
 
 		int  defendWithWorkers();
 		//int  numZerglingsInOurBase();
-		//bool beingBuildingRushed();
+		//bool bekingBuildingRushed();
 		bool isSquadUpdateFrame();
 
 		//BWAPI::Unit     findClosestDefender(const SquadCommander& defenseSquad, BWAPI::Position pos, bool flyingDefender);

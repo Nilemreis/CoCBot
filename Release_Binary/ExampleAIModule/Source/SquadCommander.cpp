@@ -34,64 +34,20 @@ SquadCommander::~SquadCommander()
 
 void SquadCommander::update()
 {
-	//// update all necessary unit information within this squad
+	// update all necessary unit information within this squad
 	updateUnits();
 
-	//// determine whether or not we should regroup
-	bool needToRegroup = needsToRegroup();
-	bool loseFormation = checkFormation();
+	updateOrders();
 
-	//// draw some debug info
-	//if (Config::Debug::DrawSquadInfo && m_order.getType() == SquadOrderTypes::Attack)
-	//{
-	//    BWAPI::Broodwar->drawTextScreen(200, 350, "%s", m_regroupStatus.c_str());
+	chooseExecution();
+	//    m_rangedManager.execute(m_order);
+	//    m_meleeManager.execute(m_order);
+	//    m_tankManager.execute(m_order);
+	//    m_medicManager.execute(m_order);
+	//    m_transportManager.update();
 
-	//    BWAPI::Unit closest = unitClosestToEnemy();
-	//}
-	//int a = CoCBot::Global::Map().getGroundDistance(calcCenter(), m_order.getPosition());
-	;
-	if(checkCompleted())
-	{
-		return;
-	}
-	std::string s = m_order.getStatus();
-	// if we do need to regroup, do it
-	if (needToRegroup)
-	{
-		BWAPI::Position regroupPosition = calcRegroupPosition();
-
-		//if (Config::Debug::DrawCombatSimulationInfo)
-		{
-			BWAPI::Broodwar->drawTextScreen(200, 150, "REGROUP");
-		}
-
-		//    BWAPI::Broodwar->drawCircleMap(regroupPosition.x, regroupPosition.y, 30, BWAPI::Colors::Purple, true);
-
-		//    m_meleeManager.regroup(regroupPosition);
-		m_rangedManager.regroup(regroupPosition);
-		//    m_tankManager.regroup(regroupPosition);
-		//    m_medicManager.regroup(regroupPosition);
-	}
-
-	if (loseFormation && !m_squadFighting)
-	{
-		m_order = SquadOrder(SquadOrderTypes::Tighten, calcCenter(), 50, "assigned", "Tighten Formation");
-		m_rangedManager.tighten(calcCenter());
-	}
-	setSquadOrder(m_tmpOrder);
-
-
-	//else // otherwise, execute micro
-	{
-		//    m_meleeManager.execute(m_order);
-		m_rangedManager.execute(m_order);
-		//    m_tankManager.execute(m_order);
-		//    m_medicManager.execute(m_order);
-		//    m_transportManager.update();
-
-		//    m_detectorManager.setUnitClosestToEnemy(unitClosestToEnemy());
-		//    m_detectorManager.execute(m_order);
-	}
+	//    m_detectorManager.setUnitClosestToEnemy(unitClosestToEnemy());
+	//    m_detectorManager.execute(m_order);
 }
 
 bool SquadCommander::isEmpty() const
@@ -114,6 +70,86 @@ void SquadCommander::updateUnits()
 	setAllUnits();
 	setNearEnemyUnits();
 	addUnitsToMicroManagers();
+}
+
+bool CoCBot::SquadCommander::updateOrders()
+{
+	if (m_order.IsForced() || m_order.getStatus() == "completed")
+	{
+		return false;
+	}
+	setSquadOrder(m_tmpOrder);
+	// determine whether or not we should regroup
+	bool needToRegroup = needsToRegroup();
+	bool loseFormation = checkFormation();
+	checkCompleted();
+	//// draw some debug info
+	//if (Config::Debug::DrawSquadInfo && m_order.getType() == SquadOrderTypes::Attack)
+	//{
+	//    BWAPI::Broodwar->drawTextScreen(200, 350, "%s", m_regroupStatus.c_str());
+
+	//    BWAPI::Unit closest = unitClosestToEnemy();
+	//}
+	//int a = CoCBot::Global::Map().getGroundDistance(calcCenter(), m_order.getPosition());
+
+
+	//std::string s = m_order.getStatus();
+	// if we do need to regroup, do it
+	if (needToRegroup)
+	{
+		BWAPI::Position regroupPosition = calcRegroupPosition();
+
+		//if (Config::Debug::DrawCombatSimulationInfo)
+		//if (Config::Debug::DrawCombatSimulationInfo)
+		{
+			BWAPI::Broodwar->drawTextScreen(200, 150, "REGROUP");
+		}
+		m_order = SquadOrder(SquadOrderTypes::Regroup, regroupPosition, 50, "assigned", "Regroup Squad");
+		//    BWAPI::Broodwar->drawCircleMap(regroupPosition.x, regroupPosition.y, 30, BWAPI::Colors::Purple, true);
+
+		//    m_meleeManager.regroup(regroupPosition);
+		//	  m_rangedManager.regroup(regroupPosition);
+		//    m_tankManager.regroup(regroupPosition);
+		//    m_medicManager.regroup(regroupPosition);
+	}
+
+	if (loseFormation && !m_squadFighting)
+	{
+		m_order = SquadOrder(SquadOrderTypes::Tighten, calcCenter(), 50, "assigned", "Tighten Formation");
+		//m_rangedManager.tighten(calcCenter());
+	}
+	return true;
+}
+
+bool SquadCommander::chooseExecution()
+{
+	if (m_order.getStatus() == "completed")
+	{
+		return false;
+	}
+
+	switch (m_order.getType())
+	{
+		case SquadOrderTypes::Attack:
+		{
+			m_rangedManager.execute(m_order);
+			break;
+		}
+
+		case SquadOrderTypes::Tighten:
+		{
+			m_rangedManager.tighten(calcCenter());
+			break;
+		}
+
+		case SquadOrderTypes::Regroup:
+		{
+			m_rangedManager.regroup(m_order.getPosition());
+			break;
+		}
+	}
+
+	return true;
 }
 
 bool SquadCommander::checkCompleted()
@@ -261,37 +297,37 @@ bool SquadCommander::needsToRegroup()
 	}
 
 	// if none of our units are in attack range of any enemy units, don't retreat
-	//std::vector<UnitInfo> enemyCombatUnits;
-	//const auto& enemyUnitInfo = Global::Info().getUnitInfo(BWAPI::Broodwar->enemy());
+	std::vector<UnitInfo> enemyCombatUnits;
+	const auto& enemyUnitInfo = Global::Info().getUnitInfo(BWAPI::Broodwar->enemy());
 	//const auto& enemyUnitInfo = BWAPI::Broodwar->enemy();
-	//
-	//bool anyInRange = false;
-	//for (const auto& eui : enemyUnitInfo)
-	//{
-	//    bool inRange = false;
-	//    for (const auto& u : m_units)
-	//    {
-	//        int range = UnitState::GetAttackRange(eui.second.type, u->getType());
-	//
-	//        if (range + 128 >= eui.second.lastPosition.getDistance(u->getPosition()))
-	//        {
-	//            inRange = true;
-	//            break;
-	//        }
-	//    }
-	//
-	//    if (inRange)
-	//    {
-	//        anyInRange = true;
-	//        break;
-	//    }
-	//}
-	//
-	//if (!anyInRange)
-	//{
-	//    m_regroupStatus = std::string("\x04 No enemy units in attack range");
-	//    return false;
-	//}
+
+	bool anyInRange = false;
+	for (const auto& eui : enemyUnitInfo)
+	{
+		bool inRange = false;
+		for (const auto& u : m_units)
+		{
+			int range = UnitState::GetAttackRange(eui.second.type, u->getType());
+
+			if (range + 128 >= eui.second.lastPosition.getDistance(u->getPosition()))
+			{
+				inRange = true;
+				break;
+			}
+		}
+
+		if (inRange)
+		{
+			anyInRange = true;
+			break;
+		}
+	}
+
+	if (!anyInRange)
+	{
+		m_regroupStatus = std::string("\x04 No enemy units in attack range");
+		return false;
+	}
 
 	//SparCraft::ScoreType score = 0;
 	//
@@ -365,6 +401,12 @@ void SquadCommander::setSquadOrder(const SquadOrder& so)
 	m_order = so;
 	m_tmpOrder = so;
 }
+
+void SquadCommander::setEmergencyOrder(const SquadOrder& so)
+{
+	m_order = so;
+}
+
 
 bool SquadCommander::containsUnit(BWAPI::Unit u) const
 {
@@ -511,6 +553,11 @@ const BWAPI::Unitset& SquadCommander::getUnits() const
 const SquadOrder& SquadCommander::getSquadOrder()	const
 {
 	return m_order;
+}
+
+const SquadOrder& SquadCommander::getOriginalOrder()	const
+{
+	return m_tmpOrder;
 }
 
 void SquadCommander::addUnit(BWAPI::Unit u)

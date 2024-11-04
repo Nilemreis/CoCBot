@@ -41,7 +41,8 @@ namespace CoCBot
         void setNearEnemyUnits();
         void setAllUnits();
         
-
+        bool updateOrders();
+        bool chooseExecution();
         bool unitNearEnemy(BWAPI::Unit unit);
         bool needsToRegroup();
         bool checkFormation();
@@ -55,6 +56,7 @@ namespace CoCBot
 
         void update();
         void setSquadOrder(const SquadOrder& so);
+        void setEmergencyOrder(const SquadOrder& so);
         void addUnit(BWAPI::Unit u);
         void removeUnit(BWAPI::Unit u);
         bool containsUnit(BWAPI::Unit u) const;
@@ -69,6 +71,7 @@ namespace CoCBot
 
         const BWAPI::Unitset& getUnits() const;
         const SquadOrder& getSquadOrder()	const;
+        const SquadOrder& getOriginalOrder()	const;
         bool checkCompleted();
     };
 }

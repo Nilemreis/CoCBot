@@ -17,6 +17,7 @@ namespace CoCBot
         BWAPI::Position     m_position;
         std::string         m_status;
         std::string         m_name;
+        bool                m_forced;
 
     public:
 
@@ -24,12 +25,13 @@ namespace CoCBot
         {
         }
 
-        SquadOrder(int type, BWAPI::Position position, int radius, std::string status = "Default", std::string name = "")
+        SquadOrder(int type, BWAPI::Position position, int radius, std::string status = "Default", std::string name = "Not Named", bool forced = false)
             : m_type(type)
             , m_position(position)
             , m_radius(radius)
             , m_status(status)
             , m_name(name)
+            , m_forced(forced)
         {
         }
 
@@ -66,6 +68,11 @@ namespace CoCBot
         const size_t getType() const
         {
             return m_type;
+        }
+        
+        const bool IsForced() const
+        {
+            return m_forced;
         }
     };
 }
