@@ -29,5 +29,7 @@ namespace CoCBot
 		// Everything below this line is safe to modify.
 		bool atkcmd;
 		GameOverlord GO;
+		bool noCommanders(BWAPI::Unitset units);
+		bool noSoldiers(BWAPI::Unitset units);
 	};
 }

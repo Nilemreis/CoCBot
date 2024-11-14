@@ -50,16 +50,84 @@ void ExampleAIModule::onStart()
 			Broodwar << "The matchup is " << Broodwar->self()->getRace() << " vs " << Broodwar->enemy()->getRace() << std::endl;
 	}
 	atkcmd = false;
-	
+
 }
 
 void CoCBot::ExampleAIModule::onEnd(bool isWinner)
 {
 	// Called when the game ends
+	enum winType{Destroyed, CommandersKilled, ThreatForcesDestroyed};
+
+	std::string enemyName = BWAPI::Broodwar->enemy()->getName();
+	std::replace(enemyName.begin(), enemyName.end(), ' ', '_');
+
+	std::string enemyResultsFile = "bwapi-data/write/results.txt";
+
+	std::stringstream ss;
+	std::string winState;
+	std::string winTypeStr;
+	BWAPI::Unitset ourSet;
+	BWAPI::Unitset enemySet;
+	ourSet = BWAPI::Broodwar->self()->getUnits();
+	enemySet = BWAPI::Broodwar->enemy()->getUnits();
 	if (isWinner)
 	{
 		// Log your win here!
+		winState = "win";
 	}
+	else
+	{
+		winState = "loss";
+	}
+
+	if (BWAPI::Broodwar->enemy()->allUnitCount() == 0 || BWAPI::Broodwar->self()->allUnitCount() == 0)
+	{
+		winTypeStr = "Destroyed";
+	}
+	else if (noCommanders(enemySet) || noCommanders(ourSet))
+	{
+		winTypeStr = "CommandersKilled";
+	}
+	else if (noSoldiers(enemySet) || noSoldiers(ourSet))
+	{
+		winTypeStr = "ThreatForcesDestroyed";
+	}
+	ss << BWAPI::Broodwar->elapsedTime() << ";" << BWAPI::Broodwar->mapFileName() << ";" << enemyName << ";" << winState << ";" << winTypeStr << "\n";
+	//for (auto& kv : m_strategies)
+	//{
+	//	const Strategy& strategy = kv.second;
+
+	//	ss << strategy.m_name << " " << strategy.m_wins << " " << strategy.m_losses << "\n";
+	//}
+	std::ofstream logStream(enemyResultsFile, std::ios::out | std::ios::app);
+	//logStream.open(enemyResultsFile);
+	logStream << ss.str();
+	logStream.flush();
+	logStream.close();
+}
+
+bool CoCBot::ExampleAIModule::noCommanders(BWAPI::Unitset units)
+{
+	for (auto& unit : units)
+	{
+		if (unit->getType().isWorker())
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool CoCBot::ExampleAIModule::noSoldiers(BWAPI::Unitset units)
+{
+	for (auto& unit : units)
+	{
+		if (unit->getType().airWeapon() || unit->getType().groundWeapon())
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
 void CoCBot::ExampleAIModule::onFrame()
